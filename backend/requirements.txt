@@ -1,0 +1,12 @@
+Flask
+keras
+tensorflow
+Pillow
+numpy
+scikit-learn
+gunicorn
+
+
+transformers
+huggingface_hub
+waitress
