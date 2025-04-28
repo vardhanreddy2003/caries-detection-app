@@ -5,7 +5,7 @@ Pillow
 numpy
 scikit-learn
 gunicorn
-
+flask_cors
 
 transformers
 huggingface_hub
