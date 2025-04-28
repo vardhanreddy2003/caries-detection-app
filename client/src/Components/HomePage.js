@@ -1,65 +1,77 @@
-import {useEffect, useState} from "react";
+import { useState } from "react";
+import "./HomePage.css";
 
+function HomePage() {
+  const [file, setFile] = useState(null);
+  const [message, setMessage] = useState("");
+  const [previewUrl, setPreviewUrl] = useState("");
 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
 
-function HomePage()
-{
-
-    const[file,setFile]=useState(null);
-    const[message,SetMessage]=useState("");
-
-    const handleFileChange=(event)=>
-    {
-        setFile(event.target.files[0]);
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
     }
+  };
 
-    const handleSubmit=async(event)=>
-    {
-        event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        if(file){
-            console.log("selected file:",file);
-            alert("file inserted");
-            const formData = new FormData();
-            formData.append("file", file);
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
 
-        const prediction=await fetch("http://localhost:5000/predict",
-            {
-                method:"POST",
-                body: formData,
-                });
-        const predicted_value=await prediction.json();
-         SetMessage(predicted_value.message);
-         alert(predicted_value.message);
-         
-        }
-        else{
-            console.log("no file selected");
-            alert("no file inserted");
-        }
+      try {
+        const response = await fetch("http://localhost:5000/predict", {
+          method: "POST",
+          body: formData,
+        });
 
-       
+        const predicted_value = await response.json();
+        setMessage(predicted_value.message);
+      } catch (error) {
+        console.error("Error during prediction:", error);
+        setMessage("Error occurred. Please try again.");
+      }
+    } else {
+      alert("Please select an image first!");
     }
-    useEffect(()=>
-        {
-            
-                alert(message);
-            
-        },[message]);
-    return(
-        <div>
+  };
 
-        <h1>Welcome to the Dental Caries Detection Model</h1>
-
-        <form onSubmit={handleSubmit}>
-
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-
-            <button type="submit"> Upload Image</button>
+  return (
+    <div className="container">
+      <div className="left-section">
+        <h1>Dental Caries Detection</h1>
+  
+        <form onSubmit={handleSubmit} className="form">
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <button type="submit">Upload Image</button>
         </form>
-        </div>
-    )
+      </div>
+  
+      <div className="right-section">
+        {previewUrl && (
+          <div className="result-section">
+            <h2>Preview Image:</h2>
+            <img src={previewUrl} alt="Uploaded preview" className="preview-image" />
+          </div>
+        )}
+  
+        {message && (
+          <div className="result-section">
+            <h2>Prediction Result:</h2>
+            <p className="message">{message}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  
 }
-
 
 export default HomePage;
