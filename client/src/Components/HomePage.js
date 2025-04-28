@@ -50,7 +50,7 @@ function HomePage() {
   
         <form onSubmit={handleSubmit} className="form">
           <input type="file" accept="image/*" onChange={handleFileChange} />
-          <button type="submit">Upload Image</button>
+          <button type="submit">Predict</button>
         </form>
       </div>
   
