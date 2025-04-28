@@ -15,7 +15,7 @@ model = load_model(model_path, compile=False)
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/predict", methods=["GET"])
+@app.route("/", methods=["GET"])
 def empty():
     return "Backend is working"
 @app.route("/predict", methods=["POST"])
