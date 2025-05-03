@@ -89,6 +89,5 @@ def process_uploaded_image(file_obj):
     return img_array
 
 if __name__ == "__main__":
-    # Use Render's assigned port, default to 10000 if not set
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
